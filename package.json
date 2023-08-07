@@ -4,7 +4,7 @@
   "description": "Um sistema de gerenciamento de salas de reunião.",
   "main": "index.js",
   "scripts": {
-    "start:dev": "nodemon --watch src/ --exec ts-node src/index.ts -e ts"
+    "start:dev": "nodemon --watch src/ --exec ts-node src/app.ts -e ts"
   },
   "keywords": [],
   "author": "",
