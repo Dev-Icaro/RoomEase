@@ -1,13 +1,21 @@
 import express from "express";
 import { config } from "dotenv";
 import configureRoutes from "./routes";
+import { PostgresClient } from "./database/postgres";
+import { updateDb } from "./helpers/database-helpers";
 
-config();
+const main = async () => {
+  config();
 
-const app = express();
+  const app = express();
 
-const port = process.env.PORT || 8080;
+  await PostgresClient.connect().then(() => updateDb());
 
-app.listen(port, () => console.log(`listening on port: ${port}`));
+  const port = process.env.PORT || 8080;
 
-configureRoutes(app);
+  app.listen(port, () => console.log(`listening on port: ${port}`));
+
+  configureRoutes(app);
+};
+
+main();
