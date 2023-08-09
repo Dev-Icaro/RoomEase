@@ -1,17 +1,41 @@
-import express, { Request, Response } from "express";
+import express from "express";
 import { PostgresUserRepository } from "../repositories/user-repository/postgres-user-repository";
-import { AuthController } from "../controllers/auth-controller/auth-controller";
+import { UserController } from "../controllers/user-controller/user-controller";
 
 const router = express.Router();
 
-router.get("/api/users", async (req: Request, res: Response) => {
+router.get("/api/users", async (req, res) => {
   const userRepository = new PostgresUserRepository();
 
-  const authController = new AuthController(userRepository);
+  const userController = new UserController(userRepository);
 
-  const { body, statusCode } = await authController.signin();
+  const { body, statusCode } = await userController.getAll();
 
-  return res.status(statusCode).send(body);
+  res.status(statusCode).send(body);
+});
+
+router.get("/api/users/:id", async (req, res) => {
+  const userRepository = new PostgresUserRepository();
+
+  const userController = new UserController(userRepository);
+
+  const { body, statusCode } = await userController.getById({
+    params: req.params,
+  });
+
+  return res.status(statusCode).json(body);
+});
+
+router.post("/api/users", async (req, res) => {
+  const userRepository = new PostgresUserRepository();
+
+  const userController = new UserController(userRepository);
+
+  const { body, statusCode } = await userController.create({
+    body: req.body,
+  });
+
+  return res.status(statusCode).json(body);
 });
 
 export default router;

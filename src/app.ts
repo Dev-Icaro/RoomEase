@@ -1,15 +1,14 @@
 import express from "express";
 import { config } from "dotenv";
 import configureRoutes from "./routes";
-import { PostgresClient } from "./database/postgres";
-import { updateDb } from "./helpers/database-helpers";
+import { PostgresClient } from "./db";
 
 const main = async () => {
   config();
 
   const app = express();
 
-  await PostgresClient.connect().then(() => updateDb());
+  await PostgresClient.connect();
 
   const port = process.env.PORT || 8080;
 
