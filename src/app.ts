@@ -1,20 +1,17 @@
 import express from "express";
 import { config } from "dotenv";
 import configureRoutes from "./routes";
-import { PostgresClient } from "./db";
+import db from "./db";
 
-const main = async () => {
-  config();
+config();
 
-  const app = express();
+const app = express();
 
-  await PostgresClient.connect();
+const port = process.env.PORT || 8080;
 
-  const port = process.env.PORT || 8080;
+db.createPool();
 
-  app.listen(port, () => console.log(`listening on port: ${port}`));
-
+app.listen(port, () => {
+  console.log(`listening on port: ${port}`);
   configureRoutes(app);
-};
-
-main();
+});

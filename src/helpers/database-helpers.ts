@@ -1,8 +1,8 @@
-import { PostgresClient } from "../db";
+import { PostgresManager } from "../db";
 
 export async function updateDb(): Promise<void> {
   try {
-    await PostgresClient.client.query(`
+    await PostgresManager.db.query(`
       CREATE TABLE IF NOT EXISTS users (
         id SERIAL PRIMARY KEY,
         username VARCHAR(100) NOT NULL,
@@ -27,7 +27,5 @@ export async function updateDb(): Promise<void> {
     `);
   } catch (error) {
     console.log(error);
-  } finally {
-    PostgresClient.client.release();
   }
 }

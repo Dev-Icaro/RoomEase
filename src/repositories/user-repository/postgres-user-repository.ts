@@ -4,19 +4,19 @@ import {
   IUserRepository,
   ICreateUserParams,
 } from "./protocols";
-import { PostgresClient } from "../../db";
+import db from "../../db";
 
 export class PostgresUserRepository implements IUserRepository {
   async getAll(): Promise<User[]> {
     const query = "SELECT * FROM users";
-    const result = await PostgresClient.db.query(query);
+    const result = await db.query(query);
 
     return result.rows as User[];
   }
 
   async getById(id: number): Promise<User> {
     const query = "SELECT * FROM users WHERE id = $1";
-    const result = await PostgresClient.db.query(query, [id]);
+    const result = await db.query(query, [id]);
 
     return result.rows[0] as User;
   }
@@ -27,11 +27,7 @@ export class PostgresUserRepository implements IUserRepository {
     const query = `INSERT INTO users (username, email, password) VALUES ($1, $2, $3) 
       RETURNING id, username, email, password`;
 
-    const result = await PostgresClient.db.query(query, [
-      username,
-      email,
-      password,
-    ]);
+    const result = await db.query(query, [username, email, password]);
 
     if (result.rows.length > 0) return result.rows[0] as User;
     else throw new Error("Failed to create user");
@@ -44,7 +40,7 @@ export class PostgresUserRepository implements IUserRepository {
 
     const query = `UPDATE users SET ${updatedColumns} WHERE id = $1`;
 
-    await PostgresClient.db.query(query, [id, ...Object.values(params)]);
+    await db.query(query, [id, ...Object.values(params)]);
 
     const user = await this.getById(id);
     if (!user) {
@@ -58,7 +54,7 @@ export class PostgresUserRepository implements IUserRepository {
     const user = await this.getById(id);
 
     const query = "DELETE FROM users WHERE id = $1";
-    const result = await PostgresClient.db.query(query, [id]);
+    const result = await db.query(query, [id]);
 
     if (result.rows[0] > 0) {
       return user;
