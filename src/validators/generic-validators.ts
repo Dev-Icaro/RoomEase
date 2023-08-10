@@ -1,16 +1,17 @@
 import { ErrorFormatter } from "../helpers/error-formatter";
 import validator from "validator";
+import { ValidationResult } from "../helpers/validation-result";
 
-export function validateId(id: number): string {
-  let error: string = "";
+export function validateId(id: number): ValidationResult {
+  const result = new ValidationResult();
 
   if (validator.isEmpty(String(id))) {
-    error = ErrorFormatter.missingArg("id");
+    result.addError(ErrorFormatter.missingArg("id"));
   }
 
   if (!validator.isNumeric(String(id))) {
-    error = ErrorFormatter.invalidArg("id");
+    result.addError(ErrorFormatter.invalidArg("id"));
   }
 
-  return error;
+  return result;
 }
