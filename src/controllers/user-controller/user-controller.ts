@@ -1,10 +1,5 @@
 import { ErrorFormatter } from "../../helpers/error-formatter";
-import {
-  badRequest,
-  notFound,
-  ok,
-  serverError,
-} from "../../helpers/http-response-helpers";
+import { badRequest, notFound, ok } from "../../helpers/http-response-helpers";
 import { User } from "../../models/user";
 import {
   ICreateUserParams,
