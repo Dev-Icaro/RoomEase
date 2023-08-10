@@ -4,4 +4,5 @@ export enum HttpStatusCode {
   NOT_FOUND = 404,
   SERVER_ERROR = 500,
   CREATED = 401,
+  CONFLICT = 409,
 }

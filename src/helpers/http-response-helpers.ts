@@ -29,7 +29,14 @@ export const notFound = <T>(body: T): HttpResponse<T> => {
   };
 };
 
-export const created = (body: unknown): HttpResponse<unknown> => {
+export const created = <T>(body: T): HttpResponse<T> => {
+  return {
+    body,
+    statusCode: HttpStatusCode.CREATED,
+  };
+};
+
+export const conflict = <T>(body: T): HttpResponse<T> => {
   return {
     body,
     statusCode: HttpStatusCode.CREATED,
