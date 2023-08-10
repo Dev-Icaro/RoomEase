@@ -3,23 +3,18 @@ import { PostgresUserRepository } from "../repositories/user-repository/postgres
 import { UserController } from "../controllers/user-controller/user-controller";
 import { UserService } from "../services/user-service/user-service";
 
+const userRepository = new PostgresUserRepository();
+const userService = new UserService(userRepository);
+const userController = new UserController(userService);
 const router = express.Router();
 
 router.get("/api/users", async (req, res) => {
-  const userRepository = new PostgresUserRepository();
-
-  const userController = new UserController(userRepository);
-
   const { body, statusCode } = await userController.getAll();
 
   res.status(statusCode).send(body);
 });
 
 router.get("/api/users/:id", async (req, res) => {
-  const userRepository = new PostgresUserRepository();
-
-  const userController = new UserController(userRepository);
-
   const { body, statusCode } = await userController.getById({
     params: req.params,
   });
@@ -28,10 +23,6 @@ router.get("/api/users/:id", async (req, res) => {
 });
 
 router.post("/api/users", async (req, res) => {
-  const userRepository = new PostgresUserRepository();
-
-  const userController = new UserController(userRepository);
-
   const { body, statusCode } = await userController.create({
     body: req.body,
   });
@@ -40,12 +31,6 @@ router.post("/api/users", async (req, res) => {
 });
 
 router.patch("/api/users/:id", async (req, res) => {
-  const userRepository = new PostgresUserRepository();
-
-  const userService = new UserService(userRepository);
-
-  const userController = new UserController(userService);
-
   const { body, statusCode } = await userController.update({
     body: req.body,
     params: req.params,
