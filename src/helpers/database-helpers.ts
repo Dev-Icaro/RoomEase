@@ -1,8 +1,8 @@
-import { PostgresManager } from "../db";
+import db from "../db";
 
 export async function updateDb(): Promise<void> {
   try {
-    await PostgresManager.db.query(`
+    await db.query(`
       CREATE TABLE IF NOT EXISTS users (
         id SERIAL PRIMARY KEY,
         username VARCHAR(100) NOT NULL,
