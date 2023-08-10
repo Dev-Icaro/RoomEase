@@ -1,3 +1,4 @@
+import { ApiValidationError } from "../../errors/api-errors";
 import { ErrorFormatter } from "../../helpers/error-formatter";
 import { User } from "../../models/user";
 import {
@@ -5,6 +6,7 @@ import {
   IUpdateUserParams,
   IUserRepository,
 } from "../../repositories/user-repository/protocols";
+import { ErrorMessage } from "../../types/error-message";
 import { userSchema } from "../../validators/schemas/user-schema";
 import { IUserService } from "./protocols";
 
@@ -36,11 +38,11 @@ export class UserService implements IUserService {
       throw new Error(ErrorFormatter.missingArg("params"));
     }
 
-    Object.keys(params).forEach(async (key) => {
+    for (const key in params) {
       await userSchema.validateAt(key, params).catch((err) => {
-        throw new Error(err);
+        throw new ApiValidationError({ message: err.message });
       });
-    });
+    }
 
     return await this.userRepository.update(params, id);
   }
