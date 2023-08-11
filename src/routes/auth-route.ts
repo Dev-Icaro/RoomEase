@@ -39,4 +39,13 @@ router.patch("/api/users/:id", async (req, res) => {
   return res.status(statusCode).json(body);
 });
 
+router.delete("/api/users/:id", async (req, res) => {
+  const { body, statusCode } = await userController.delete({
+    body: req.body,
+    params: req.params,
+  });
+
+  return res.status(statusCode).json(body);
+});
+
 export default router;

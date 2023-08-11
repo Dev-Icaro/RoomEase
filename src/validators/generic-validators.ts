@@ -1,4 +1,4 @@
-import { ErrorFormatter } from "../helpers/error-formatter";
+import { ErrorFormatter } from "../helpers/error-helpers";
 import validator from "validator";
 import { ValidationResult } from "../helpers/validation-result";
 
