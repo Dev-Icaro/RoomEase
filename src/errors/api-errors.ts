@@ -23,3 +23,10 @@ export class ApiUniqueConstraintError extends ApiError {
     this.name = "ApiUniqueConstraintError";
   }
 }
+
+export class ApiNotFoundError extends ApiError {
+  constructor(errorMessage: ErrorMessage) {
+    super(errorMessage);
+    this.name = "ApiNotFoundError";
+  }
+}
