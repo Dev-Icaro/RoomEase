@@ -19,4 +19,8 @@ export interface IUserController {
   update(
     httpRequest: HttpRequest<IUpdateUserParams>
   ): Promise<HttpResponse<User | ErrorMessage>>;
+
+  delete(
+    httpRequest: HttpRequest<null>
+  ): Promise<HttpResponse<User | ErrorMessage>>;
 }

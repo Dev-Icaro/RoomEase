@@ -5,6 +5,7 @@ import {
   ICreateUserParams,
 } from "./protocols";
 import db from "../../db";
+import { ApiError } from "../../errors/api-errors";
 
 export class PostgresUserRepository implements IUserRepository {
   async getAll(): Promise<User[]> {
@@ -30,7 +31,7 @@ export class PostgresUserRepository implements IUserRepository {
     const result = await db.query(query, [username, email, password]);
 
     if (result.rows.length > 0) return result.rows[0] as User;
-    else throw new Error("Failed to create user");
+    else throw new ApiError({ message: "Failed to create user" });
   }
 
   async update(params: IUpdateUserParams, id: number): Promise<User> {
@@ -44,22 +45,20 @@ export class PostgresUserRepository implements IUserRepository {
 
     const user = await this.getById(id);
     if (!user) {
-      throw new Error("Failed to update user");
+      throw new ApiError({ message: "Failed to update user" });
     }
 
     return user;
   }
 
   async delete(id: number): Promise<User> {
-    const user = await this.getById(id);
-
     const query = "DELETE FROM users WHERE id = $1";
     const result = await db.query(query, [id]);
 
-    if (result.rows[0] > 0) {
-      return user;
+    if (result.rowCount > 0) {
+      return result.rowCount;
     } else {
-      throw new Error("Failed to delete user");
+      throw new ApiError({ message: "Failed to delete user" });
     }
   }
 }
