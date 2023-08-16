@@ -22,6 +22,13 @@ export class PostgresUserRepository implements IUserRepository {
     return result.rows[0] as User;
   }
 
+  async getByEmail(email: string): Promise<User> {
+    const query = "SELECT * FROM users WHERE email = '$1'";
+    const result = await db.query(query, [email]);
+
+    return result.rows[0] as User;
+  }
+
   async create(params: ICreateUserParams): Promise<User> {
     const { username, email, password } = params;
 

@@ -9,6 +9,7 @@ import {
   IUpdateUserParams,
   IUserRepository,
 } from "../../repositories/user-repository/protocols";
+import { encrypt } from "../../utils/crypto-utils";
 import { userSchema } from "../../validators/schemas/user-schema";
 import { IUserService } from "./protocols";
 
@@ -30,6 +31,17 @@ export class UserService implements IUserService {
     return user;
   }
 
+  async getByEmail(email: string): Promise<User> {
+    const user = await this.userRepository.getByEmail(email);
+
+    if (!user) {
+      const msg = ErrorFormatter.notFound("user");
+      throw new ApiNotFoundError(createErrorMessage(msg));
+    }
+
+    return user;
+  }
+
   async create(params: ICreateUserParams): Promise<User> {
     if (Object.keys(params as object).length === 0) {
       const msg = ErrorFormatter.missingArg("params");
@@ -39,6 +51,10 @@ export class UserService implements IUserService {
     await userSchema.validate(params, { abortEarly: false }).catch((err) => {
       throw new ApiValidationError(err);
     });
+
+    const cryptoResult = await encrypt(params.password);
+
+    params = { ...params, password: cryptoResult.hash, iv: cryptoResult.iv };
 
     return this.userRepository.create(params);
   }

@@ -30,3 +30,10 @@ export class ApiNotFoundError extends ApiError {
     this.name = "ApiNotFoundError";
   }
 }
+
+export class ApiUnauthorizedError extends ApiError {
+  constructor(errorMessage: ErrorMessage) {
+    super(errorMessage);
+    this.name = "ApiUnauthorizedError";
+  }
+}
