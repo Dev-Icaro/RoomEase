@@ -1,0 +1,36 @@
+version: "1.1"
+services:
+  roomease:
+    image: icaro/roomease:1.1
+    container_name: roomease
+    volumes:
+      - C:\Icaro\RoomEase\src:/app-node/src
+    environment:
+      POSTGRES_URL: postgresql://postgres:Icaro06$@database:5432/roomEase
+    networks:
+      - roomease-bridge
+    ports:
+      - 8080:3000
+      - 9229:9229
+    entrypoint: ["npm", "run", "start:debug"]
+
+  postgres:
+    image: postgres:15
+    container_name: database
+    environment:
+      POSTGRES_DB: roomEase
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Icaro06$
+    networks:
+      - roomease-bridge
+    ports:
+      - 5433:5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
+
+networks:
+  roomease-bridge:
+    driver: bridge

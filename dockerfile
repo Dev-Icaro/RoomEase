@@ -1,0 +1,7 @@
+FROM node:18.16.0
+WORKDIR /app-node
+COPY . .
+ARG PORT=3000
+ENV PORT=$PORT
+EXPOSE $PORT
+RUN npm install
