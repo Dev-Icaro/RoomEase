@@ -1,6 +1,3 @@
 {
-  "db": {
-    "url": "postgres://postgres:Icaro06$@localhost:5432/roomease"
-  },
   "migrations-dir": "./src/migrations"
 }

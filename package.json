@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start:dev": "nodemon --watch src/ --exec ts-node src/app.ts -e ts",
-    "migrate": "ts-node node_modules/.bin/node-pg-migrate -j ts"
+    "migrate": "node-pg-migrate -f migrate-config.json"
   },
   "keywords": [],
   "author": "",
