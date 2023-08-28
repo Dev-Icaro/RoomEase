@@ -5,30 +5,43 @@ import { IAuthService, Credentials } from "./protocols";
 import { ErrorFormatter } from "../../helpers/error-helpers";
 import { createErrorMessage } from "../../helpers/error-helpers";
 import { IUserService } from "../user-service/protocols";
+import { compareHashes } from "../../utils/crypto-utils";
+import * as jwt from "jsonwebtoken";
+import { JsonWebToken } from "../../controllers/auth-controller/protocols";
 
 export class AuthService implements IAuthService {
   constructor(private readonly userService: IUserService) {}
 
-  async login(credentials: Credentials): Promise<string> {
+  async login(credentials: Credentials): Promise<JsonWebToken> {
     const { email, password } = credentials;
 
-    if (!email) {
-      const msg = ErrorFormatter.missingArg("email");
-      throw new ApiUnauthorizedError(createErrorMessage(msg));
-    }
+    if (!email)
+      throw new ApiUnauthorizedError(
+        createErrorMessage(ErrorFormatter.missingArg("email"))
+      );
 
-    if (!password) {
-      const msg = ErrorFormatter.missingArg("password");
-      throw new ApiUnauthorizedError(createErrorMessage(msg));
-    }
+    if (!password)
+      throw new ApiUnauthorizedError(
+        createErrorMessage(ErrorFormatter.missingArg("password"))
+      );
 
+    // If the user was not found the service will throw an error.
     const user = await this.userService.getByEmail(email);
-    if (!user) {
-      const msg = ErrorFormatter.notFound("email");
-      throw new ApiUnauthorizedError(createErrorMessage(msg));
-    }
+    const isValidPass = compareHashes(password, user.password);
 
-    // Descrypt pass and compare it to the password sended by param
+    if (isValidPass) {
+      const payload = {
+        user: user,
+      };
+      const token = jwt.sign(payload, process.env.JWT_SECRET as jwt.Secret, {
+        expiresIn: "1h",
+      });
+
+      return { token };
+    } else
+      throw new ApiUnauthorizedError(
+        createErrorMessage("Invalid email or password")
+      );
   }
 
   async register(params: ICreateUserParams): Promise<User> {

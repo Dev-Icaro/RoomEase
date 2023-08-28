@@ -9,7 +9,7 @@ export const PostgresManager = {
     }
 
     this.pool = new Pool({
-      connectionString: process.env.POSTGRES_URL,
+      connectionString: process.env.DATABASE_URL,
     });
 
     this.pool.on("error", (err) => {

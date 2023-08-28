@@ -3,6 +3,7 @@ import {
   conflict,
   notFound,
   serverError,
+  unauthorized,
 } from "../helpers/http-response-helpers";
 import { HttpResponse } from "../controllers/protocols";
 import { ErrorMessage } from "../types/error-message";
@@ -21,6 +22,9 @@ export class ErrorHandler {
         }
         case "ApiNotFoundError": {
           return notFound({ message: err.message, errors: err.errors });
+        }
+        case "ApiUnauthorizedError": {
+          return unauthorized({ message: err.message, errors: err.errors });
         }
         default: {
           return serverError();

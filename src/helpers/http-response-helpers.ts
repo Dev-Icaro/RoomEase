@@ -42,3 +42,10 @@ export const conflict = <T>(body: T): HttpResponse<T> => {
     statusCode: HttpStatusCode.CREATED,
   };
 };
+
+export const unauthorized = <T>(body: T): HttpResponse<T> => {
+  return {
+    body,
+    statusCode: HttpStatusCode.UNAUTHORIZED,
+  };
+};

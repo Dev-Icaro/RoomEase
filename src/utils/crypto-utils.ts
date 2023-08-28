@@ -1,4 +1,5 @@
 import * as crypto from "node:crypto";
+import * as bcrypt from "bcrypt";
 
 type CryptoParams = {
   iv: string;
@@ -6,6 +7,7 @@ type CryptoParams = {
 };
 
 const algorithm = "aes-128-cbc";
+const bcryptSaltRounds = 10;
 
 export function encrypt(s: string): Promise<CryptoParams> {
   return new Promise((resolve) => {
@@ -44,4 +46,13 @@ export function decrypt(cryptoParams: CryptoParams): Promise<string> {
 
     resolve(string);
   });
+}
+
+export function hashString(s: string): string {
+  const salt = bcrypt.genSaltSync(bcryptSaltRounds);
+  return bcrypt.hashSync(s, salt);
+}
+
+export function compareHashes(hash1: string, hash2: string): boolean {
+  return bcrypt.compareSync(hash1, hash2);
 }

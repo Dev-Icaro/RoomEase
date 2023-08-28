@@ -9,9 +9,9 @@ import {
   IUpdateUserParams,
   IUserRepository,
 } from "../../repositories/user-repository/protocols";
-import { encrypt } from "../../utils/crypto-utils";
 import { userSchema } from "../../validators/schemas/user-schema";
 import { IUserService } from "./protocols";
+import { hashString } from "../../utils/crypto-utils";
 
 export class UserService implements IUserService {
   constructor(private readonly userRepository: IUserRepository) {}
@@ -43,18 +43,22 @@ export class UserService implements IUserService {
   }
 
   async create(params: ICreateUserParams): Promise<User> {
-    if (Object.keys(params as object).length === 0) {
-      const msg = ErrorFormatter.missingArg("params");
-      throw new ApiValidationError({ message: msg });
-    }
+    if (Object.keys(params as object).length === 0)
+      throw new ApiValidationError(
+        createErrorMessage(ErrorFormatter.missingArg("params"))
+      );
 
     await userSchema.validate(params, { abortEarly: false }).catch((err) => {
-      throw new ApiValidationError(err);
+      throw new ApiValidationError(
+        createErrorMessage("ValidationError", err.errors)
+      );
     });
 
-    const cryptoResult = await encrypt(params.password);
+    const isEmailInUse = await this.userRepository.getByEmail(params.email);
+    if (isEmailInUse)
+      throw new ApiValidationError(createErrorMessage("Email alredy in use"));
 
-    params = { ...params, password: cryptoResult.hash, iv: cryptoResult.iv };
+    params.password = hashString(params.password);
 
     return this.userRepository.create(params);
   }

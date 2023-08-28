@@ -23,7 +23,7 @@ export class PostgresUserRepository implements IUserRepository {
   }
 
   async getByEmail(email: string): Promise<User> {
-    const query = "SELECT * FROM users WHERE email = '$1'";
+    const query = "SELECT * FROM users WHERE email = $1";
     const result = await db.query(query, [email]);
 
     return result.rows[0] as User;
@@ -33,7 +33,7 @@ export class PostgresUserRepository implements IUserRepository {
     const { username, email, password } = params;
 
     const query = `INSERT INTO users (username, email, password) VALUES ($1, $2, $3) 
-      RETURNING id, username, email, password`;
+      RETURNING id, username, email`;
 
     const result = await db.query(query, [username, email, password]);
 
