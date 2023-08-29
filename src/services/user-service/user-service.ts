@@ -45,12 +45,12 @@ export class UserService implements IUserService {
   async create(params: ICreateUserParams): Promise<User> {
     if (Object.keys(params as object).length === 0)
       throw new ApiValidationError(
-        createErrorMessage(ErrorFormatter.missingArg("params"))
+        createErrorMessage(ErrorFormatter.missingArg("params")),
       );
 
     await userSchema.validate(params, { abortEarly: false }).catch((err) => {
       throw new ApiValidationError(
-        createErrorMessage("ValidationError", err.errors)
+        createErrorMessage("ValidationError", err.errors),
       );
     });
 
