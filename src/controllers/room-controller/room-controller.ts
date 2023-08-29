@@ -4,7 +4,7 @@ import {
   ErrorHandler,
   createErrorMessage,
 } from "../../helpers/error-helpers";
-import { ok } from "../../helpers/http-response-helpers";
+import { created, ok } from "../../helpers/http-response-helpers";
 import { Room } from "../../models/room";
 import {
   ICreateRoomParams,
@@ -57,7 +57,7 @@ export class RoomController implements IRoomController {
         );
 
       const room = await this.roomService.create(body);
-      return ok(room);
+      return created(room);
     } catch (error) {
       return ErrorHandler.handle(error);
     }

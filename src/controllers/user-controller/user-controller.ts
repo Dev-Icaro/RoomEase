@@ -1,5 +1,5 @@
 import { ErrorFormatter, ErrorHandler } from "../../helpers/error-helpers";
-import { badRequest, ok } from "../../helpers/http-response-helpers";
+import { badRequest, created, ok } from "../../helpers/http-response-helpers";
 import { User } from "../../models/user";
 import {
   ICreateUserParams,
@@ -55,7 +55,7 @@ export class UserController implements IUserController {
 
       const user = await this.userService.create(body);
 
-      return ok(user);
+      return created(user);
     } catch (error) {
       return ErrorHandler.handle(error);
     }

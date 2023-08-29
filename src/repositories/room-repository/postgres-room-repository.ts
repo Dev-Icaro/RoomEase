@@ -26,8 +26,8 @@ export class PostgresRoomRepository implements IRoomRespository {
   async create(params: ICreateRoomParams): Promise<Room> {
     const { name, capacity, amenities } = params;
 
-    const query =
-      "INSERT INTO rooms (name, capacity, amenities) VALUES ($1, $2, $3)";
+    const query = `INSERT INTO rooms (name, capacity, amenities) VALUES ($1, $2, $3)
+      RETURNING id, name, capacity, amenities`;
 
     const result = await db.query(query, [name, capacity, amenities]);
 
@@ -41,7 +41,7 @@ export class PostgresRoomRepository implements IRoomRespository {
       .join(",");
 
     const query = `UPDATE rooms SET ${updatedColumns} WHERE id = $1
-      RETURNING EMAIL`;
+      RETURNING *`;
 
     const result = await db.query(query, [id, ...Object.values(params)]);
 

@@ -6,7 +6,7 @@ import { ErrorFormatter } from "../../helpers/error-helpers";
 import { createErrorMessage } from "../../helpers/error-helpers";
 import { IUserService } from "../user-service/protocols";
 import { compareHashes } from "../../utils/crypto-utils";
-import * as jwt from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import { JsonWebToken } from "../../controllers/auth-controller/protocols";
 
 export class AuthService implements IAuthService {
@@ -17,12 +17,12 @@ export class AuthService implements IAuthService {
 
     if (!email)
       throw new ApiUnauthorizedError(
-        createErrorMessage(ErrorFormatter.missingArg("email"))
+        createErrorMessage(ErrorFormatter.missingArg("email")),
       );
 
     if (!password)
       throw new ApiUnauthorizedError(
-        createErrorMessage(ErrorFormatter.missingArg("password"))
+        createErrorMessage(ErrorFormatter.missingArg("password")),
       );
 
     // If the user was not found the service will throw an error.
@@ -40,7 +40,7 @@ export class AuthService implements IAuthService {
       return { token };
     } else
       throw new ApiUnauthorizedError(
-        createErrorMessage("Invalid email or password")
+        createErrorMessage("Invalid email or password"),
       );
   }
 

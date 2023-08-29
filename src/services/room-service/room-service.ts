@@ -1,3 +1,4 @@
+import errorConstants from "../../constants/error-constants";
 import { ApiNotFoundError, ApiValidationError } from "../../errors/api-errors";
 import {
   ErrorFormatter,
@@ -24,7 +25,7 @@ export class RoomService implements IRoomService {
 
     if (!room)
       throw new ApiNotFoundError(
-        createErrorMessage(ErrorFormatter.notFound("room"))
+        createErrorMessage(ErrorFormatter.notFound("room")),
       );
 
     return room;
@@ -33,12 +34,12 @@ export class RoomService implements IRoomService {
   async create(params: ICreateRoomParams): Promise<Room> {
     if (Object.keys(params).length === 0)
       throw new ApiValidationError(
-        createErrorMessage(ErrorFormatter.missingArg("params"))
+        createErrorMessage(errorConstants.MISSING_REQ_PARAMS),
       );
 
     await roomSchema.validate(params).catch((err) => {
       throw new ApiValidationError(
-        createErrorMessage("ValidationError", err.errors)
+        createErrorMessage("ValidationError", err.errors),
       );
     });
 
@@ -49,12 +50,12 @@ export class RoomService implements IRoomService {
     const roomExists = await this.roomRepository.getById(id);
     if (!roomExists)
       throw new ApiNotFoundError(
-        createErrorMessage(ErrorFormatter.notFound("room"))
+        createErrorMessage(ErrorFormatter.notFound("room")),
       );
 
     if (Object.keys(params).length === 0)
       throw new ApiValidationError(
-        createErrorMessage(ErrorFormatter.missingArg("params"))
+        createErrorMessage(ErrorFormatter.missingArg("params")),
       );
 
     for (const key in params) {
@@ -70,7 +71,7 @@ export class RoomService implements IRoomService {
     const room = await this.roomRepository.getById(id);
     if (!room)
       throw new ApiNotFoundError(
-        createErrorMessage(ErrorFormatter.notFound("room"))
+        createErrorMessage(ErrorFormatter.notFound("room")),
       );
 
     return await this.roomRepository.delete(id);
